@@ -1,0 +1,12 @@
+/home/roboticslab/Developer/image2overlays/config.ini
+RAW_DIR=/home/roboticslab/Downloads/2d_up_9_to_8_test/images
+MASK_DIR=/home/roboticslab/Downloads/2d_up_9_to_8_test/images_out/2024-02-26_21-55-59/stainmask
+CONFIG=config_stain.json
+MODEL=saved/StainNet/2024-02-26_00-05/best_model.pth
+MODEL_PATH=/home/roboticslab/Developer/pytorch_concrete_flaws_segmentation/saved/StainNet/2024-02-26_00-05/best_model.pth
+Processing complete!
+2024-02-26 21:55:59: Create output folder, run_timestamp subfolder.
+2024-02-26 21:55:59: Create raw, mask, overlay, mvs folders in run_timestamp folder.
+2024-02-26 21:56:00: Running stain segmentation...
+2024-02-26 21:56:03: Running stain overlay...
+2024-02-26 21:56:04: Script sequence completed.
