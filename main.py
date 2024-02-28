@@ -14,7 +14,7 @@ def call_in_conda_env(script_command):
     # Define the Conda environment name
     conda_env_name = "visualinspection113"
     # Construct the command to run the script within the Conda environment
-    command = f"/bin/bash -c 'conda run -n {conda_env_name} --no-capture-output {script_command}'"
+    command = f"/bin/bash -c 'source /home/roboticslab/anaconda3/bin/activate {conda_env_name} && {script_command}'"
     # Execute the command
     subprocess.call(command, shell=True)
 

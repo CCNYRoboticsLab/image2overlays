@@ -32,11 +32,11 @@ if not os.path.exists(mask_directory):
     os.makedirs(mask_directory)
 
 # Get the model path
-model_path = Path("/media/roboticslab/owncloud/crack_seg/pytorch_segmentation") / model
+model_path = Path("/home/roboticslab/Developer/pytorch_concrete_flaws_segmentation") / model
 print(f"MODEL_PATH={model_path}")
 
 # Define the directory where inference.py is located
-pytorch_segmentation_dir = "/media/roboticslab/owncloud/crack_seg/pytorch_segmentation"
+pytorch_segmentation_dir = "/home/roboticslab/Developer/pytorch_concrete_flaws_segmentation"
 
 # Combined command to activate conda environment and run the Python script
 # source '/home/roboticslab/miniconda3/etc/profile.d/conda.sh' && \
