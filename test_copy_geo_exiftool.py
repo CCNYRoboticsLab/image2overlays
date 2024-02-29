@@ -9,8 +9,8 @@ class TestImageProcessing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Backup the original mask image
-        cls.test_raw_image_path = '/home/roboticslab/Developer/image2overlays/TestImages/raw/S1078749.JPG'
-        cls.test_mask_image_path = '/home/roboticslab/Developer/image2overlays/TestImages/S1078749.JPG'
+        cls.test_raw_image_path = 'TestImages/raw/S1078749.JPG'
+        cls.test_mask_image_path = 'TestImages/S1078749.JPG'
         cls.backup_mask_image_path = f"{cls.test_mask_image_path}_original"
         if not os.path.exists(cls.backup_mask_image_path):
             os.rename(cls.test_mask_image_path, cls.backup_mask_image_path)
