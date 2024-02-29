@@ -10,38 +10,50 @@ def log_message(message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"{timestamp}: {message}")
 
-def call_in_conda_env(script_command):
-    # Define the Conda environment name
-    conda_env_name = "visualinspection113"
+def call_in_conda_env(script_command, conda_env_name="visualinspection113"):
+    """
+    Executes a given script command within a specified Conda environment.
+
+    Parameters:
+    - script_command: The command to run within the Conda environment.
+    - conda_env_name: Optional. The name of the Conda environment to activate. Defaults to "visualinspection113".
+    """
     # Construct the command to run the script within the Conda environment
     command = f"/bin/bash -c 'source /home/roboticslab/anaconda3/bin/activate {conda_env_name} && {script_command}'"
     # Execute the command
     subprocess.call(command, shell=True)
 
-# Replace your existing subprocess.call lines with call_in_conda_env function calls
+def main():
+    # Replace your existing subprocess.call lines with call_in_conda_env function calls
 
-# Create output folder, run_timestamp subfolder
-log_message("Create output folder, run_timestamp subfolder.")
-call_in_conda_env("python CreateRunTimestampDirectory.py")
+    # Create output folder, run_timestamp subfolder
+    log_message("Create output folder, run_timestamp subfolder.")
+    call_in_conda_env("python CreateRunTimestampDirectory.py")
 
-# UpdateRawMaskOverlayConfigs.py
-log_message("Create raw, mask, overlay, mvs folders in run_timestamp folder.")
-call_in_conda_env("python UpdateRawMaskOverlayConfigs.py")
+    # UpdateRawMaskOverlayConfigs.py
+    log_message("Create raw, mask, overlay, mvs folders in run_timestamp folder.")
+    call_in_conda_env("python UpdateRawMaskOverlayConfigs.py")
 
-if process_crack:
-    # Run crack related processing
-    log_message("Running crack segmentation...")
-    call_in_conda_env("python cracksegmentation.py")
-    
-    log_message("Running crack overlay...")
-    call_in_conda_env("python crackoverlay.py")
+    if process_crack:
+        # Run crack related processing
+        log_message("Running crack segmentation...")
+        call_in_conda_env("python cracksegmentation.py")
+        
+        log_message("Running crack overlay...")
+        call_in_conda_env("python crackoverlay.py")
 
-if process_stain:
-    # Run stain related processing
-    log_message("Running stain segmentation...")
-    call_in_conda_env("python stainsegmentation.py")
-    
-    log_message("Running stain overlay...")
-    call_in_conda_env("python stainoverlay.py")
+    if process_stain:
+        # Run stain related processing
+        log_message("Running stain segmentation...")
+        call_in_conda_env("python stainsegmentation.py")
+        
+        log_message("Running stain overlay...")
+        call_in_conda_env("python stainoverlay.py")
+        
+        log_message("Copying geolocation info to crack overlay...")
+        call_in_conda_env("python copy_geolocation_crack.py")
+        
+    log_message("Script sequence completed.")
 
-log_message("Script sequence completed.")
+if __name__ == "__main__":
+    main()

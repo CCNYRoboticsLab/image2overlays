@@ -36,6 +36,32 @@ class TestGeolocationCopying(unittest.TestCase):
 
         exif_bytes = piexif.dump(exif_dict)
         piexif.insert(exif_bytes, raw_image_path)
+        
+        # Assuming you have an image file at this path
+        image_path = raw_image_path
+        print(image_path)
+        # Load the image
+        img = Image.open(image_path)
+
+        # Prepare dummy GPS data
+        # Format: (degrees, minutes, seconds)
+        # Note: For simplicity, using (10, 0, 0.0) for latitude and (20, 0, 0.0) for longitude as an example
+        gps_ifd = {
+            piexif.GPSIFD.GPSLatitudeRef: b'N',
+            piexif.GPSIFD.GPSLatitude: [(10, 1), (0, 1), (0, 1)],
+            piexif.GPSIFD.GPSLongitudeRef: b'E',
+            piexif.GPSIFD.GPSLongitude: [(20, 1), (0, 1), (0, 1)]
+        }
+
+        # Create an EXIF data structure, inserting the GPS data
+        exif_dict = {"GPS": gps_ifd}
+        exif_bytes = piexif.dump(exif_dict)
+
+        # Insert the EXIF data back into the image
+        img.save(image_path, "jpeg", exif=exif_bytes)
+
+        # Close the image file
+        img.close()
 
     def test_geolocation_copy(self):
         # Run the script
