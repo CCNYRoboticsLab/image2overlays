@@ -43,9 +43,14 @@ class TestImageProcessing(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        # Clean up: Restore the original state of the mask image
+        # Rename the processed mask image for inspection instead of deleting
+        if os.path.exists(cls.test_mask_image_path):
+            processed_mask_image_path = cls.test_mask_image_path.replace('.JPG', '_processed.JPG')
+            os.rename(cls.test_mask_image_path, processed_mask_image_path)
+            print(f"Processed image available at: {processed_mask_image_path}")
+
+        # Restore the original state of the mask image from the backup
         if os.path.exists(cls.backup_mask_image_path):
-            os.remove(cls.test_mask_image_path)
             os.rename(cls.backup_mask_image_path, cls.test_mask_image_path)
 
 if __name__ == '__main__':
