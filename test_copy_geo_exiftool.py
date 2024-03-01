@@ -51,7 +51,9 @@ class TestImageProcessing(unittest.TestCase):
 
         # Restore the original state of the mask image from the backup
         if os.path.exists(cls.backup_mask_image_path):
-            os.rename(cls.backup_mask_image_path, cls.test_mask_image_path)
+            import shutil
+            shutil.copy2(cls.backup_mask_image_path, cls.test_mask_image_path)
+            # os.rename(cls.backup_mask_image_path, cls.test_mask_image_path)
 
 if __name__ == '__main__':
     unittest.main()
