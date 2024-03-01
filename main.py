@@ -46,7 +46,7 @@ def main():
         call_in_conda_env("python copy_geolocation_crack.py")
         
         log_message("Convert overlay images to pointcloud. ")
-        call_in_conda_env("python overlay2pointcloud.py --damage_type 'crack'")
+        call_in_conda_env("python overlay2pointcloud.py --damage_type crack")
 
     if process_stain:
         # Run stain related processing
@@ -57,10 +57,10 @@ def main():
         call_in_conda_env("python stainoverlay.py")
         
         log_message("Copying geolocation info to stain overlay...")
-        call_in_conda_env("python copy_geolocation_stain.py")
+        call_in_conda_env("python3 copy_geolocation_stain.py")
         
         log_message("Convert overlay images to pointcloud. ")
-        call_in_conda_env("python overlay2pointcloud.py --damage_type stain")
+        call_in_conda_env("python3 overlay2pointcloud.py --damage_type stain")
         
     log_message("Script sequence completed.")
 
