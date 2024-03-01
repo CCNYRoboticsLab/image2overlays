@@ -62,6 +62,9 @@ def main():
         log_message("Convert overlay images to pointcloud. ")
         call_in_conda_env("python3 overlay2pointcloud.py --damage_type stain")
         
+        log_message("Convert to Potree. ")
+        call_in_conda_env("python3 las2potree.py --damage_type stain")
+        
     log_message("Script sequence completed.")
 
 if __name__ == "__main__":
