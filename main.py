@@ -41,6 +41,9 @@ def main():
         
         log_message("Running crack overlay...")
         call_in_conda_env("python crackoverlay.py")
+        
+        log_message("Copying geolocation info to crack overlay...")
+        call_in_conda_env("python copy_geolocation_crack.py")
 
     if process_stain:
         # Run stain related processing
@@ -50,8 +53,8 @@ def main():
         log_message("Running stain overlay...")
         call_in_conda_env("python stainoverlay.py")
         
-        log_message("Copying geolocation info to crack overlay...")
-        call_in_conda_env("python copy_geolocation_crack.py")
+        log_message("Copying geolocation info to stain overlay...")
+        call_in_conda_env("python copy_geolocation_stain.py")
         
     log_message("Script sequence completed.")
 

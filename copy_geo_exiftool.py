@@ -1,4 +1,5 @@
 #!/home/roboticslab/Developer/image2overlays/.conda/bin/python
+import os
 import subprocess
 import json
 
@@ -16,6 +17,7 @@ def get_geolocation_with_exiftool(image_path):
 def write_geolocation_with_exiftool(dest_image, latitude, longitude, altitude):
     command = [
         "exiftool",
+        "-overwrite_original",  # Modify in-place
         f"-GPSLatitude={latitude}",
         f"-GPSLongitude={longitude}",
         f"-GPSAltitude={altitude}",
