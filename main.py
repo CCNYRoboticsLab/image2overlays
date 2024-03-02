@@ -4,7 +4,8 @@ from datetime import datetime
 
 # Define flags for processing
 process_crack = False
-process_stain = True
+process_stain = False
+process_spall = True
 
 def log_message(message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -23,7 +24,7 @@ def call_in_conda_env(script_command, conda_env_name="visualinspection113"):
     # Execute the command
     subprocess.call(command, shell=True)
 
-def main():
+def main():  # sourcery skip: extract-duplicate-method
     # Replace your existing subprocess.call lines with call_in_conda_env function calls
 
     # Create output folder, run_timestamp subfolder
@@ -47,7 +48,16 @@ def main():
         
         log_message("Convert overlay images to pointcloud. ")
         call_in_conda_env("python overlay2pointcloud.py --damage_type crack")
-
+        
+        if process_spall:
+            log_message("Creating spall overlay...")
+            call_in_conda_env("python3 crackmask2spalloverlay.py")
+            
+            log_message("Copying geolocation info to spall overlay...")
+            call_in_conda_env("python3 copy_geolocation_spall.py")
+            
+            log_message("las2potree for spall overlay")
+            call_in_conda_env("python3 overlay2pointcloud.py --damage_type spall")
     if process_stain:
         # Run stain related processing
         log_message("Running stain segmentation...")

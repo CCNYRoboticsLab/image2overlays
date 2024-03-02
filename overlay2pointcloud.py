@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import configparser
 import os
+from crackmask2spalloverlay import get_spall_overlay_directory
 
 def remove_image_part(path):
     """Removes the 'images' part at the end of a given path.
@@ -38,6 +39,8 @@ def run_odm(damage_type):
         project_path = config['CrackOverlay']['overlay_directory']
     elif damage_type == 'stain':
         project_path = config['StainOverlay']['overlay_directory']
+    elif damage_type == 'spall':
+        project_path = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
     else:
         raise ValueError("Invalid damage_type. Must be 'crack' or 'stain'.")
 
@@ -51,7 +54,7 @@ def run_odm(damage_type):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run OpenDroneMap with damage-specific overlays.")
-    parser.add_argument("--damage_type", choices=['crack', 'stain'], required=True, help="Type of damage: crack or stain")  # Optional argument 
+    parser.add_argument("--damage_type", choices=['crack','spall', 'stain'], required=True, help="Type of damage: crack, spall or stain")  # Optional argument 
     args = parser.parse_args()
 
 
