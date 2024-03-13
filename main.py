@@ -58,6 +58,10 @@ def main():  # sourcery skip: extract-duplicate-method
             
             log_message("las2potree for spall overlay")
             call_in_conda_env("python3 overlay2pointcloud.py --damage_type spall")
+            
+            log_message("Convert to Potree. ")
+            call_in_conda_env("python3 las2potree.py --damage_type spall")
+    
     if process_stain:
         # Run stain related processing
         log_message("Running stain segmentation...")

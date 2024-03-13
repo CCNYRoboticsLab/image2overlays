@@ -2,6 +2,8 @@ import argparse
 import subprocess
 import configparser
 import os
+from crackmask2spalloverlay import get_spall_overlay_directory
+
 
 def get_overlay_directory(overlay_images_directory):
     """Removes the 'images' part at the end of a given path.
@@ -48,6 +50,8 @@ def run_PotreeConverter(damage_type):
         overlay_images_directory = config['CrackOverlay']['overlay_directory']
     elif damage_type == 'stain':
         overlay_images_directory = config['StainOverlay']['overlay_directory']
+    elif damage_type == 'spall':
+        overlay_images_directory = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
     else:
         raise ValueError("Invalid damage_type. Must be 'crack' or 'stain'.")
 
@@ -61,7 +65,7 @@ def run_PotreeConverter(damage_type):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run OpenDroneMap with damage-specific overlays.")
-    parser.add_argument("--damage_type", choices=['crack', 'stain'], required=True, help="Type of damage: crack or stain")  # Optional argument 
+    parser.add_argument("--damage_type", choices=['crack', 'spall', 'stain'], required=True, help="Type of damage: crack, spall or stain")  # Optional argument 
     args = parser.parse_args()
 
 
