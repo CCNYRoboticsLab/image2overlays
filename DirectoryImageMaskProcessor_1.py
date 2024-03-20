@@ -1,5 +1,4 @@
 from PIL import Image
-import numpy as np
 import os
 
 
@@ -17,10 +16,19 @@ class DirectoryImageMaskProcessor:
         os.makedirs(self.red_output_directory, exist_ok=True)
         os.makedirs(self.green_output_directory, exist_ok=True)
 
-        # Process each image in the input directory
-        for image_file in os.listdir(self.input_directory):
-            if image_file.lower().endswith(("png", "jpg", "jpeg")):
-                self.process_image(image_file)
+        image_files = [
+            f
+            for f in os.listdir(self.input_directory)
+            if f.lower().endswith(("png", "jpg", "jpeg"))
+        ]
+        total_images = len(image_files)
+        print(f"Found {total_images} images to process.")
+
+        for idx, image_file in enumerate(image_files, start=1):
+            print(f"Processing image {idx}/{total_images}: {image_file}")
+            self.process_image(image_file)
+
+        print("All images processed successfully.")
 
     def process_image(self, image_file):
         # Load and convert the image
@@ -55,17 +63,16 @@ class DirectoryImageMaskProcessor:
 
         # Save the mask
         mask.save(mask_path)
+        print(f"Saved {mask_type} mask: {mask_path}")
 
 
 # Example usage
 if __name__ == "__main__":
-    input_directory = (
-        "images_folder"  # This directory should contain the images to process.
-    )
+    input_directory = "images_folder"  # Adjust this path to your folder of images
 
     processor = DirectoryImageMaskProcessor(input_directory)
     processor.process_directory()
 
     print(
-        f"Processing complete. Check the parent directory of '{input_directory}' for the results."
+        f"Processing complete. Check the parent directory of '{input_directory}' for the 'red_crack_masks' and 'green_spall_masks' folders."
     )
