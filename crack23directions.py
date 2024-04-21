@@ -8,6 +8,9 @@ import configparser
 from pathlib import Path
 
 from DirectoryImageMaskProcessor_1 import DirectoryImageMaskProcessor
+from DirectoryImageMaskProcessor_23directions import (
+    DirectoryImageMaskProcessor_23directions,
+)
 
 
 class CrackMaskProcessor:
@@ -42,6 +45,9 @@ class CrackMaskProcessor:
     def get_crack_spall_mask_path(self):
         return self.mask_directory
 
+    def get_red_crack_mask_path(self):
+        return self.mask_directory.replace("crackmask", "red_crack_masks")
+
     def get_and_ensure_3masks_directory(self):
         # Replace 'crackmask' with '3masks' in the mask_directory path
         masks_directory = self.mask_directory.replace("crackmask", "3masks")
@@ -55,6 +61,17 @@ class CrackMaskProcessor:
 
 
 # Main part of the script
+def extract_crack(crack_spall_mask_path):
+    input_directory = crack_spall_mask_path
+
+    processor_extract_crack = DirectoryImageMaskProcessor(input_directory)
+    processor_extract_crack.process_directory()
+
+    print(
+        f"Processing complete. Check the parent directory of '{input_directory}' for the results."
+    )
+
+
 if __name__ == "__main__":
     script_dir = Path(__file__).parent.absolute()
     config_ini_path = script_dir / "config.ini"
@@ -66,15 +83,22 @@ if __name__ == "__main__":
     crack_spall_mask_path = processor.get_crack_spall_mask_path()
     print(f"Crack/Spall Mask Path: {crack_spall_mask_path}")
 
+    # Extracting red crack images into a seperate file
+    # extract_crack(crack_spall_mask_path)
+
+    # Get red_crack_masks directory path
+    red_crack_mask_path = processor.get_red_crack_mask_path()
+    print(f"red_crack_mask Path: {red_crack_mask_path}")
+
     masks_directory_path = processor.get_and_ensure_3masks_directory()
     print(f"'3masks' Directory Path: {masks_directory_path}")
 
-    # Extracting red crack images into a seperate file
-    input_directory = crack_spall_mask_path
+    # Extracting three directions of cracks into three files
+    input_directory = red_crack_mask_path
 
-    processor = DirectoryImageMaskProcessor(input_directory)
-    processor.process_directory()
+    processor_extract_3 = DirectoryImageMaskProcessor_23directions(input_directory)
+    processor_extract_3.process_directory()
 
     print(
-        f"Processing complete. Check the parent directory of '{input_directory}' for the results."
+        f"Processing complete. Check the parent directory of '{masks_directory_path}' for the results."
     )
