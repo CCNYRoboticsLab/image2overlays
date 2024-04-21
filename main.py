@@ -3,9 +3,10 @@ import subprocess
 from datetime import datetime
 
 # Define flags for processing
-process_crack = False
-process_stain = False
-process_spall = True
+concrete_filter = True
+process_crack = True
+process_stain = True
+process_spall = True  # if crack is not processed, spall won't be processed.
 
 
 def log_message(message):
@@ -37,6 +38,13 @@ def main():  # sourcery skip: extract-duplicate-method
     # UpdateRawMaskOverlayConfigs.py
     log_message("Create raw, mask, overlay, mvs folders in run_timestamp folder.")
     call_in_conda_env("python UpdateRawMaskOverlayConfigs.py")
+    
+    if concrete_filter:
+        log_message("Running concrete mask...")
+        call_in_conda_env("python concretemask.py")
+    exit()
+
+    # Run crack related processing
 
     if process_crack:
         # Run crack related processing
