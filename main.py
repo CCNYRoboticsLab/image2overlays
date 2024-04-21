@@ -42,6 +42,9 @@ def main():  # sourcery skip: extract-duplicate-method
     if concrete_filter:
         log_message("Running concrete mask...")
         call_in_conda_env("python concretemask.py")
+        
+        log_message("Running filter raw...")
+        call_in_conda_env("python filterRaw.py")
     exit()
 
     # Run crack related processing
