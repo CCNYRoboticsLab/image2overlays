@@ -19,6 +19,13 @@ mask_directory = config["CrackSegmentation"]["mask_directory"]
 config_param = config["CrackSegmentation"]["config"]
 model = config["CrackSegmentation"]["model"]
 
+# Check if filteredRaw folder exists, then use filteredRaw as the raw folder
+# filteredRaw = mask_directory.replace("crackmask", "filteredRaw")
+# if os.path.exists(filteredRaw):
+#     raw_directory = filteredRaw
+
+# Print the parameters
+
 print(f"RAW_DIR={raw_directory}")
 print(f"MASK_DIR={mask_directory}")
 print(f"CONFIG={config_param}")

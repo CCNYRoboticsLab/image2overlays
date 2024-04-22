@@ -3,10 +3,11 @@ import subprocess
 from datetime import datetime
 
 # Define flags for processing
-concrete_filter = True
+concrete_pre_filter = False
 process_crack = True
 process_stain = True
 process_spall = True  # if crack is not processed, spall won't be processed.
+concrete_post_filter = True
 
 
 def log_message(message):
@@ -39,13 +40,12 @@ def main():  # sourcery skip: extract-duplicate-method
     log_message("Create raw, mask, overlay, mvs folders in run_timestamp folder.")
     call_in_conda_env("python UpdateRawMaskOverlayConfigs.py")
     
-    if concrete_filter:
-        log_message("Running concrete mask...")
-        call_in_conda_env("python concretemask.py")
+    # if concrete_pre_filter:
+    #     log_message("Running concrete mask...")
+    #     call_in_conda_env("python concretemask.py")
         
-        log_message("Running filter raw...")
-        call_in_conda_env("python filterRaw.py")
-    exit()
+    #     log_message("Running filter raw...")
+    #     call_in_conda_env("python filterRaw.py")
 
     # Run crack related processing
 
@@ -53,6 +53,14 @@ def main():  # sourcery skip: extract-duplicate-method
         # Run crack related processing
         log_message("Running crack segmentation...")
         call_in_conda_env("python cracksegmentation.py")
+        
+        log_message("Running concrete mask...")
+        call_in_conda_env("python concretemask.py")
+        
+        log_message("Running concrete post filter...")
+        call_in_conda_env("python concretePostFilter.py")
+        
+        exit()
 
         log_message("Converting crack masks to 3 categories according to directions...")
         call_in_conda_env("python crack23directions.py")
