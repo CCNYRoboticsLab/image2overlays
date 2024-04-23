@@ -1,4 +1,4 @@
-# This script reads the crackMask images and the concreteMask folder to create filteredCrack folder which has those result images.
+# This script reads the stainMask images and the concreteMask folder to create filteredStain folder which has those result images.
 import cv2
 import os
 import configparser
@@ -14,8 +14,8 @@ config.read("config.ini")  # Replace with the actual path to your INI file
 # raw_dir = config["Settings"]["raw_directory"]
 # output_dir = config["Overlay"]["overlay_transparent_directory"]
 concreteMask_dir = config["CrackSegmentation"]["mask_directory"].replace("crackmask", "concretemask")
-crackMask_dir = config["CrackSegmentation"]["mask_directory"]
-output_dir = config["CrackSegmentation"]["mask_directory"].replace("crackmask", "filteredCrackMasks")
+stainMask_dir = config["CrackSegmentation"]["mask_directory"].replace("crackmask", "stainmask")
+output_dir = config["CrackSegmentation"]["mask_directory"].replace("crackmask", "filteredStainMasks")
 
 # Ensure the output directory exists
 if not os.path.exists(output_dir):
@@ -24,16 +24,16 @@ if not os.path.exists(output_dir):
 # Iterate over the files in the mask directory
 for concreteMask_name in os.listdir(concreteMask_dir):
     # Extract the image name from the filename
-    crackMask_name = concreteMask_name.split(".")[0] + ".png"
+    stainMask_name = concreteMask_name.split(".")[0] + ".png"
 
     # Load the mask and raw images
     mask_image = cv2.imread(
         os.path.join(concreteMask_dir, concreteMask_name), cv2.IMREAD_GRAYSCALE
     )
-    original_image = cv2.imread(os.path.join(crackMask_dir, crackMask_name))
+    original_image = cv2.imread(os.path.join(stainMask_dir, stainMask_name))
 
     if mask_image is None or original_image is None:
-        print(f"Error reading {concreteMask_name} or {crackMask_name}. Skipping...")
+        print(f"Error reading {concreteMask_name} or {stainMask_name}. Skipping...")
         continue
 
     # Ensure the original image and mask have the same dimensions
@@ -46,7 +46,7 @@ for concreteMask_name in os.listdir(concreteMask_dir):
     masked_original = cv2.bitwise_and(original_image, original_image, mask=mask_image)
 
     # Save the overlaid image to the output directory
-    output_name = os.path.join(output_dir, crackMask_name)
+    output_name = os.path.join(output_dir, stainMask_name)
     cv2.imwrite(output_name, masked_original)
     print(f"Saved {output_name}")
 
