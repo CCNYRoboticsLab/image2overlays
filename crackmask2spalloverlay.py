@@ -3,7 +3,7 @@ import os
 import configparser
 
 def get_spall_overlay_directory(crack_overlay_directory):
-    return crack_overlay_directory.replace("crackoverlay", "spalloverlay")
+    return crack_overlay_directory.replace("filteredCrackOverlays", "filteredSpallOverlay")
 
 def main():
     # Load the INI file and parse it
@@ -12,9 +12,9 @@ def main():
 
     # Paths for the mask images, raw images, and output images
     # Read from the INI file
-    mask_dir = config["CrackSegmentation"]["mask_directory"]
+    mask_dir = config["CrackSegmentation"]["mask_directory"].replace("crackmask", "filteredCrackMasks")
     raw_dir = config["Settings"]["image_path"]
-    crack_overlay_directory = config["CrackOverlay"]["overlay_directory"]
+    crack_overlay_directory = config["CrackOverlay"]["overlay_directory"].replace("crackoverlay", "filteredCrackOverlays")
     spall_overlay_directory = get_spall_overlay_directory(crack_overlay_directory)
 
     # Ensure the output directory exists
@@ -51,7 +51,7 @@ def main():
 
         # Where the mask is white, set the raw image to red
         # raw[mask == 38] = [0, 0, 255]
-        raw[mask == 75] = [0, 0, 255]
+        raw[mask == 75] = [255, 0, 0]
         # Save the overlaid image to the output directory
         spall_overlaid_image_path = os.path.join(spall_overlay_directory, os.path.basename(raw_path))
         cv2.imwrite(spall_overlaid_image_path, raw)
