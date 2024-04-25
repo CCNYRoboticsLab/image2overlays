@@ -47,7 +47,7 @@ cd "{pytorch_segmentation_dir}" && python3 inference.py \
     --model "{model_path}" \
     --images "{raw_directory}" \
     --output "{mask_directory}" \
-    --extension 'JPG'
+    --extension jpg png JPG
 """
 
 os.system(command)
