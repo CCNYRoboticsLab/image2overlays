@@ -29,7 +29,7 @@ def run_odm(damage_type):
     """Executes the OpenDroneMap command with a project path based on damage type.
 
     Args:
-        damage_type (str): The type of damage (either 'crack' or 'stain').
+        damage_type (str): The type of damage (either 'crack', 'stain', 'spall', or 'raw').
     """
 
     config = configparser.ConfigParser()
@@ -41,11 +41,13 @@ def run_odm(damage_type):
         project_path = config['StainOverlay']['overlay_directory']
     elif damage_type == 'spall':
         project_path = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
+    elif damage_type == 'raw':
+        project_path = '/home/roboticslab/Downloads/OneDrive_2024-02-03/NYC Span 8-9/raw/images'  # Assuming you'll add this in config.ini
     else:
-        raise ValueError("Invalid damage_type. Must be 'crack' or 'stain'.")
+        raise ValueError("Invalid damage_type. Must be 'crack', 'spall', 'stain' or 'raw'.")
 
     command = [
-        "docker", "run", "-ti", "--rm",
+        "docker", "run", "-ti", "--gpus", "all", "--rm",
         "-v", f"{remove_image_part(project_path)}:/datasets/code",
         "opendronemap/odm",
         "--project-path", "/datasets"
@@ -54,7 +56,7 @@ def run_odm(damage_type):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run OpenDroneMap with damage-specific overlays.")
-    parser.add_argument("--damage_type", choices=['crack','spall', 'stain'], required=True, help="Type of damage: crack, spall or stain")  # Optional argument 
+    parser.add_argument("--damage_type", choices=['crack','spall', 'stain', 'raw'], default='raw', help="Type of damage: crack, spall, stain or raw.")  # Optional argument 
     args = parser.parse_args()
 
 

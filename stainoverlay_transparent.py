@@ -38,7 +38,7 @@ for mask_name in os.listdir(mask_dir):
     weight_map = np.zeros_like(raw)  
 
     # Set pixels where mask == 38 to the color [0, 0, 255] (blue)
-    weight_map[mask == 38] = [0, 0, 255] 
+    weight_map[mask == 38] = [0, 0, 100] 
 
     # Overlay the weight map onto the original image
     overlay = cv2.addWeighted(raw, 1, weight_map, 0.5, 0) 
