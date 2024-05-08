@@ -42,14 +42,14 @@ def run_odm(damage_type):
     elif damage_type == 'spall':
         project_path = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
     elif damage_type == 'raw':
-        project_path = '/home/roboticslab/Downloads/OneDrive_2024-02-03/NYC Span 8-9/raw/images'  # Assuming you'll add this in config.ini
+        project_path = '/home/roboticslab/Downloads/OneDrive_2024-02-03/NYCSpan8-9/raw/images'  # Assuming you'll add this in config.ini
     else:
         raise ValueError("Invalid damage_type. Must be 'crack', 'spall', 'stain' or 'raw'.")
 
     command = [
         "docker", "run", "-ti", "--gpus", "all", "--rm",
-        "-v", f"{remove_image_part(project_path)}:/datasets/code",
-        "opendronemap/odm",
+        "-v", f"{remove_image_part(project_path)}:/datasets",
+        "opendronemap/odm:gpu",
         "--project-path", "/datasets"
     ]
     subprocess.run(command, check=True)
