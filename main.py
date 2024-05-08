@@ -92,6 +92,10 @@ def main():  # sourcery skip: extract-duplicate-method
         log_message("Running stain segmentation...")
         call_in_conda_env("python stainsegmentation.py")
 
+        if concrete_post_filter:
+            log_message("Running concrete post filter...")
+            call_in_conda_env("python concretePostFilterStain.py")
+
         log_message("Running stain overlay...")
         call_in_conda_env("python stainoverlay.py")
 

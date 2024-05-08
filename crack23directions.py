@@ -84,7 +84,7 @@ if __name__ == "__main__":
     print(f"Crack/Spall Mask Path: {crack_spall_mask_path}")
 
     # Extracting red crack images into a seperate file
-    # extract_crack(crack_spall_mask_path)
+    extract_crack(crack_spall_mask_path)
 
     # Get red_crack_masks directory path
     red_crack_mask_path = processor.get_red_crack_mask_path()
