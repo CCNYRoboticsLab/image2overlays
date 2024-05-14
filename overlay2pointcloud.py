@@ -4,6 +4,7 @@ import configparser
 import os
 from crackmask2spalloverlay import get_spall_overlay_directory
 
+
 def remove_image_part(path):
     """Removes the 'images' part at the end of a given path.
 
@@ -22,9 +23,13 @@ def remove_image_part(path):
     elif parts[-2] == "images":  # 'images' is the second-to-last segment
         parts = parts[:-2]
     else:
-        print(f"Warning: 'images' directory not found in the expected location within the path '{path}'")
+        print(
+            f"Warning: 'images' directory not found in the expected location within the path '{path}'"
+        )
 
     return os.sep.join(parts)
+
+
 def run_odm(damage_type):
     """Executes the OpenDroneMap command with a project path based on damage type.
 
@@ -33,31 +38,49 @@ def run_odm(damage_type):
     """
 
     config = configparser.ConfigParser()
-    config.read('config.ini')  # Read your config file
+    config.read("config.ini")  # Read your config file
 
-    if damage_type == 'crack':
-        project_path = config['CrackOverlay']['overlay_directory']
-    elif damage_type == 'stain':
-        project_path = config['StainOverlay']['overlay_directory']
-    elif damage_type == 'spall':
-        project_path = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
-    elif damage_type == 'raw':
-        project_path = '/home/roboticslab/Downloads/OneDrive_2024-02-03/NYCSpan8-9/raw/images'  # Assuming you'll add this in config.ini
+    if damage_type == "crack":
+        project_path = config["CrackOverlay"]["overlay_directory"]
+    elif damage_type == "stain":
+        project_path = config["StainOverlay"]["overlay_directory"]
+    elif damage_type == "spall":
+        project_path = get_spall_overlay_directory(
+            config["CrackOverlay"]["overlay_directory"]
+        )
+    elif damage_type == "raw":
+        project_path = "/home/roboticslab/Downloads/pi_cam/video_out/2024-05-08_17-07-01/images"  # Assuming you'll add this in config.ini
     else:
-        raise ValueError("Invalid damage_type. Must be 'crack', 'spall', 'stain' or 'raw'.")
+        raise ValueError(
+            "Invalid damage_type. Must be 'crack', 'spall', 'stain' or 'raw'."
+        )
 
     command = [
-        "docker", "run", "-ti", "--gpus", "all", "--rm",
-        "-v", f"{remove_image_part(project_path)}:/datasets",
+        "docker",
+        "run",
+        "-ti",
+        "--gpus",
+        "all",
+        "--rm",
+        "-v",
+        f"{remove_image_part(project_path)}:/datasets/code",
         "opendronemap/odm:gpu",
-        "--project-path", "/datasets"
+        "--project-path",
+        "/datasets",
     ]
     subprocess.run(command, check=True)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run OpenDroneMap with damage-specific overlays.")
-    parser.add_argument("--damage_type", choices=['crack','spall', 'stain', 'raw'], default='raw', help="Type of damage: crack, spall, stain or raw.")  # Optional argument 
-    args = parser.parse_args()
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Run OpenDroneMap with damage-specific overlays."
+    )
+    parser.add_argument(
+        "--damage_type",
+        choices=["crack", "spall", "stain", "raw"],
+        default="raw",
+        help="Type of damage: crack, spall, stain or raw.",
+    )  # Optional argument
+    args = parser.parse_args()
 
     run_odm(args.damage_type)

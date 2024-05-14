@@ -52,8 +52,10 @@ def run_PotreeConverter(damage_type):
         overlay_images_directory = config['StainOverlay']['overlay_directory']
     elif damage_type == 'spall':
         overlay_images_directory = get_spall_overlay_directory(config['CrackOverlay']['overlay_directory'])
+    elif damage_type == "raw":
+        overlay_images_directory = "/home/roboticslab/Downloads/pi_cam/video_out/2024-05-08_17-07-01/images"  # Assuming you'll add this in config.ini
     else:
-        raise ValueError("Invalid damage_type. Must be 'crack' or 'stain'.")
+        raise ValueError("Invalid damage_type. Must be 'crack', 'spall', 'raw' or 'stain'.")
 
     command = [
         "/home/roboticslab/Downloads/PotreeConverter-2.1.1/build/PotreeConverter",
@@ -65,7 +67,7 @@ def run_PotreeConverter(damage_type):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run OpenDroneMap with damage-specific overlays.")
-    parser.add_argument("--damage_type", choices=['crack', 'spall', 'stain'], required=True, help="Type of damage: crack, spall or stain")  # Optional argument 
+    parser.add_argument("--damage_type", choices=['crack', 'spall', 'stain', 'raw'], default='raw', type=str, help="Type of damage: crack, spall, raw or stain")  # Optional argument 
     args = parser.parse_args()
 
 
