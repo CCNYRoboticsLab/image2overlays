@@ -8,85 +8,51 @@ import os
 
 
 class CrackClassifier:
-    def __init__(self):
-        pass
 
     @classmethod
     def classify_and_save_cracks(cls, red_mask_image_path, output_folder):
-        # Load the red mask image
         red_mask = Image.open(red_mask_image_path)
         red_mask_np = np.array(red_mask)
-        alpha_channel = red_mask_np[:, :, 3] 
-
-        # Label connected components
+        alpha_channel = red_mask_np[:, :, 3]
         labeled_mask = label(alpha_channel)
 
-        # Lists to hold coordinates for bounding boxes
-        straight_line_cracks = []
-        other_cracks = []
+        straight_line_threshold = 5  
 
-        # Classify and draw bounding boxes
+        # Create output folders if they don't exist
+        straight_folder = os.path.join(output_folder, "straight_cracks")
+        other_folder = os.path.join(output_folder, "other_cracks")
+        os.makedirs(straight_folder, exist_ok=True)
+        os.makedirs(other_folder, exist_ok=True)
+
+        # Visualize (Optional)
         fig, ax = plt.subplots()
         ax.imshow(alpha_channel, cmap=plt.cm.gray)
 
-        for region in measure.regionprops(labeled_mask):
+        # Iterate over each region (crack)
+        for i, region in enumerate(regionprops(labeled_mask)):
             y0, x0, y1, x1 = region.bbox
             region_height = y1 - y0
             region_width = x1 - x0
             aspect_ratio = region_width / float(region_height)
 
-            straight_line_threshold = 5 
+            # Determine crack type and save
+            crack_type = "straight" if aspect_ratio >= straight_line_threshold or aspect_ratio <= 1/straight_line_threshold else "other"
+            output_path = os.path.join(straight_folder if crack_type == "straight" else other_folder, f"crack_{i}.png")
 
-            # Create bounding box patch
-            rect = patches.Rectangle((x0, y0), region_width, region_height, 
-                                    linewidth=1, edgecolor='none', facecolor='none')
+            # Crop and save the crack region
+            crack_image = Image.fromarray(alpha_channel[y0:y1, x0:x1])  
+            crack_image.save(output_path)
+
+            # Visualize (Optional)
+            rect = patches.Rectangle((x0, y0), region_width, region_height, linewidth=1, edgecolor='red' if crack_type == "straight" else 'green', facecolor='none')
             ax.add_patch(rect)
 
-            if aspect_ratio >= straight_line_threshold or aspect_ratio <= 1/straight_line_threshold:
-                straight_line_cracks.extend(region.coords)
-                rect.set_edgecolor('red')
-            else:
-                other_cracks.extend(region.coords)
-                rect.set_edgecolor('green')
-
-
-            # Get the original image name from the path
-    # image_name = os.path.basename(red_mask_image_path)
-
-    # # Save the image with bounding boxes, including the original image name
-    # plt.savefig(f"{output_folder}/cracks_with_bounding_boxes_{image_name}")  # Corrected line
-    # plt.close(fig)
-
-        # Create the output directory if it doesn't exist
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
-
-        # Image shape needed for mask creation
-        image_shape = alpha_channel.shape
-        
-        # Save the image with bounding boxes
-        plt.savefig(f"{output_folder}/cracks_with_bounding_boxes.png")
+        # Save overall image with bounding boxes (Optional)
+        plt.savefig(f"{output_folder}/all_cracks_with_bounding_boxes.png")
         plt.close(fig)  # Close the plot to free up memory
-        
 
-        # Save masks for each type of crack
-        cls._save_crack_mask(
-            straight_line_cracks, f"{output_folder}/straight_line_crack_mask.png", image_shape
-        )
-        cls._save_crack_mask(
-            other_cracks, f"{output_folder}/other_crack_mask.png", image_shape
-        )
-
-
-    @staticmethod
-    def _save_crack_mask(coords_list, mask_path, image_shape):
-        # Create an empty image with transparent background
-        crack_mask = Image.new("RGBA", (image_shape[1], image_shape[0]), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(crack_mask)
-
-        # Draw each pixel for the classified cracks
-        for coord in coords_list:
-            draw.point((coord[1], coord[0]), fill=(255, 0, 0, 255))  # (x, y)
-
-        # Save the mask
-        crack_mask.save(mask_path)
+# Example Usage:
+# crack_classifier = CrackClassifier()
+# red_mask_image_path = "path/to/your/red_mask.png" 
+# output_folder = "crack_results"
+# crack_classifier.classify_and_save_cracks(red_mask_image_path, output_folder)
