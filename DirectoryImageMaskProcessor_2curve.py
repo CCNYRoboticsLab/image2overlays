@@ -1,10 +1,11 @@
 from PIL import Image
 import os
-from red2curve import CrackClassifier
+from red2curve_nn import CrackClassifier
 
 
 class DirectoryImageMaskProcessor_2curve:
-    def __init__(self, input_directory):
+    def __init__(self, raw_directory_path, input_directory):
+        self.raw_directory_path = raw_directory_path
         self.input_directory = input_directory
         parent_directory = os.path.dirname(input_directory)
         # self.red_output_directory = os.path.join(parent_directory, "red_crack_masks")
@@ -37,19 +38,24 @@ class DirectoryImageMaskProcessor_2curve:
         ]
         total_images = len(image_files)
         print(f"Found {total_images} images to process.")
+        
 
-        for idx, image_file in enumerate(image_files, start=1):
-            print(f"Processing image {idx}/{total_images}: {image_file}")
-            self.process_image(image_file)
+
+        for idx, red_mask_filename in enumerate(image_files, start=1):
+            print(f"Processing image {idx}/{total_images}: {red_mask_filename}")
+            # Construct the raw image path using the directory and filename
+            raw_image_path = os.path.join(self.raw_directory_path, red_mask_filename.replace(".png", ".JPG"))  # Adjust the extension if necessary
+        
+            self.process_image(raw_image_path, red_mask_filename)
 
         print("All images processed successfully.")
 
-    def process_image(self, image_file):
+    def process_image(self, raw_image_path, image_file):
         # Load and convert the image
         image_path = os.path.join(self.input_directory, image_file)
         output_directory_w_filename = os.path.join(self.output_directory, image_file)
         CrackClassifier.classify_and_save_cracks(
-            image_path, output_directory_w_filename
+            raw_image_path, image_path, output_directory_w_filename
         )
         print(f"Saved curved crack mask: {output_directory_w_filename}")
         # image = Image.open(image_path).convert("RGBA")

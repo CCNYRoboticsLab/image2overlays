@@ -42,6 +42,9 @@ class CrackMaskProcessor:
             os.makedirs(self.mask_directory)
             print(f"Ensured existence of directory: {self.mask_directory}")
 
+    def get_raw_directory_path(self):
+        return self.raw_directory
+
     def get_crack_spall_mask_path(self):
         return self.mask_directory
 
@@ -90,6 +93,8 @@ if __name__ == "__main__":
 
     processor = CrackMaskProcessor(config_ini_path)
     processor.ensure_directories_exist()
+    
+    raw_directory_path = processor.get_raw_directory_path()
 
     crack_spall_mask_path = processor.get_crack_spall_mask_path()
     print(f"Crack/Spall Mask Path: {crack_spall_mask_path}")
@@ -107,7 +112,7 @@ if __name__ == "__main__":
     # Extracting three directions of cracks into three files
     input_directory = red_crack_mask_path
 
-    processor_extract_3 = DirectoryImageMaskProcessor_2curve(input_directory)
+    processor_extract_3 = DirectoryImageMaskProcessor_2curve(raw_directory_path, input_directory)
     processor_extract_3.process_directory()
 
     print(
