@@ -69,9 +69,9 @@ class CrackClassifier:
             text_color = 'white' if avg_intensity < 128 else 'black'  # Choose color based on average intensity
             ax.text(x0, y0 - 5, f"{confidence:.1f}", color=text_color, alpha=0.5)  # Set alpha for transparency (0 to 1)
             
-            print(f"Crack {i} classified as {crack_type} with confidence {confidence:.1f}")
+            # print(f"Crack {i} classified as {crack_type} with confidence {confidence:.1f}")
             if crack_type == "other cracks":
-                print("Found other crack:", i)  # Print if an "other_cracks" is detected
+                # print("Found other crack:", i)  # Print if an "other_cracks" is detected
                 other_cracks_mask[y0:y1, x0:x1] = 255
 
         # Save overall image with bounding boxes (Optional)
@@ -86,7 +86,7 @@ class CrackClassifier:
         red_mask.save(os.path.join(output_folder, "red_mask.png"))  # Save the red mask
 
         # Create and SAVE the filtered raw mask for debugging
-        print(np.unique(other_cracks_mask))  # Should print [0 255] if "other_cracks" exist
+        # print(np.unique(other_cracks_mask))  # Should print [0 255] if "other_cracks" exist
         filtered_raw_mask = Image.fromarray(other_cracks_mask)  # Don't need to scale here
         filtered_raw_mask.save(os.path.join(output_folder, "mask_filter.png")) 
         
@@ -106,6 +106,15 @@ class CrackClassifier:
         # Paste the filtered raw mask onto the raw image
         filtered_raw.paste(filtered_mask_img, (0, 0), filtered_mask_img)  
         filtered_raw.save(os.path.join(output_folder, "filtered_overlay.png"))
+        
+        # Create solid_filtered_overlay
+        solid_filtered_overlay = Image.new("RGBA", raw_image.size)
+        solid_filtered_overlay.paste(raw_image)
+
+        solid_mask = Image.new("RGBA", filtered_mask_img.size, (255, 0, 0, 255))  # Solid red color
+        solid_filtered_overlay.paste(solid_mask, (0, 0), filtered_mask_img)  # Use filtered_mask_img as the mask
+        
+        solid_filtered_overlay.save(os.path.join(output_folder, "solid_filtered_overlay.png"))
         
         filtered_raw = Image.new("RGBA", raw_image.size)
         filtered_raw.paste(raw_image)
