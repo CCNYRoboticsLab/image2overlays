@@ -62,7 +62,7 @@ def main():
         weight_map[mask == 75] = [255, 0, 0] 
 
         # Overlay the weight map onto the original image
-        overlay = cv2.addWeighted(raw, 1, weight_map, 0.5, 0) 
+        overlay = cv2.addWeighted(raw, 1, weight_map, 0.7, 0) 
         
         # Save the overlaid image to the output directory
         spall_overlaid_image_path = os.path.join(spall_overlay_directory, os.path.basename(raw_path))

@@ -1,0 +1,5 @@
+concrete_mask: true
+process_crack: true
+process_stain: false
+process_spall: true
+concrete_post_filter: true

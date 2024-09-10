@@ -8,9 +8,13 @@ config.read("config.ini")  # Replace with the actual path to your INI file
 
 # Paths for the mask images, raw images, and output images
 # Read from the INI file
-mask_dir = config["StainSegmentation"]["mask_directory"].replace("stainmask", "filteredStainMasks")
+mask_dir = config["StainSegmentation"]["mask_directory"].replace(
+    "stainmask", "filteredStainMasks"
+)
 raw_dir = config["Settings"]["image_path"]
-output_dir = config["StainOverlay"]["overlay_directory"].replace("stainoverlay", "filteredStainOverlays")
+output_dir = config["StainOverlay"]["overlay_directory"].replace(
+    "stainoverlay", "filteredStainOverlays"
+)
 
 # Ensure the output directory exists
 if not os.path.exists(output_dir):
@@ -19,7 +23,7 @@ if not os.path.exists(output_dir):
 # Iterate over the files in the mask directory
 for mask_name in os.listdir(mask_dir):
     # Extract the image name from the filename
-    raw_name = mask_name.split(".")[0] + ".jpg"
+    raw_name = mask_name.split(".")[0] + ".JPG"
 
     # Load the mask and raw images
     mask = cv2.imread(os.path.join(mask_dir, mask_name), cv2.IMREAD_GRAYSCALE)

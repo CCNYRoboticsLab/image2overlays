@@ -1,2 +1,7 @@
 __pycache__/
 output.log
+best_model_crack.pth
+best_model_stain.pth
+config.ini
+crack2curve.log
+output.log

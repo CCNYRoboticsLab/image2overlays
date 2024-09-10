@@ -20,8 +20,10 @@ if not os.path.exists(output_dir):
 
 # Iterate over the files in the mask directory
 for mask_name in os.listdir(mask_dir):
-    # Extract the image name from the filename
+    # Extract the image name from the filename    
     raw_name = mask_name.split(".")[0] + ".jpg"
+    if not os.path.isfile(os.path.join(raw_dir, raw_name)):
+        raw_name = mask_name.split(".")[0] + ".JPG"
 
     # Load the mask and raw images
     mask = cv2.imread(os.path.join(mask_dir, mask_name), cv2.IMREAD_GRAYSCALE)

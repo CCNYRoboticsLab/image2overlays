@@ -106,15 +106,25 @@ if __name__ == "__main__":
     red_crack_mask_path = processor.get_red_crack_mask_path()
     print(f"red_crack_mask Path: {red_crack_mask_path}")
 
-    masks_directory_path = processor.get_and_ensure_curve_directory()
-    print(f"'Curve' Directory Path: {masks_directory_path}")
+    # Before processing the directory, ensure it exists
+    os.makedirs(red_crack_mask_path, exist_ok=True)
 
-    # Extracting three directions of cracks into three files
-    input_directory = red_crack_mask_path
+    # Check if the directory is empty
+    if not os.listdir(red_crack_mask_path):
+        print(f"Warning: The directory '{red_crack_mask_path}' is empty.")
+        print("Please ensure that the 'crack23directions.py' has been run and generated the red crack mask images.")
+        exit(1)
 
-    processor_extract_3 = DirectoryImageMaskProcessor_2curve(raw_directory_path, input_directory)
+    # List the files in the directory
+    files = [f for f in os.listdir(red_crack_mask_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tif', '.tiff'))]
+    print(f"Found {len(files)} image files in {red_crack_mask_path}")
+
+    if not files:
+        print("No image files found. Please check the file extensions and ensure the images are present.")
+        exit(1)
+
+    curve_directory_path = processor.get_and_ensure_curve_directory()
+    processor_extract_3 = DirectoryImageMaskProcessor_2curve(raw_directory_path, red_crack_mask_path)
     processor_extract_3.process_directory()
 
-    print(
-        f"Processing complete. Check the parent directory of '{masks_directory_path}' for the results."
-    )
+    print(f"Processing complete. Check the directory '{curve_directory_path}' for the results.")

@@ -13,47 +13,22 @@ def create_run_directory():
 
     # Create the output directory
     output_directory = os.path.splitext(image_path)[0] + "_out"
-    # if not os.path.exists(output_directory):
-    #     os.makedirs(output_directory)
-    #
-    # # Print a message to confirm that the folder was created
-    # print(f"Created output directory: {output_directory}")
-
-    # # Create the output directory
-    # output_directory = os.path.splitext(video_path)[0] + "_out"
-
-    # Get the current time and date
-    now = datetime.datetime.now()
-
-    # Format the time and date into a string
-    timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-
-    # Create the run_timestamp directory
-    run_directory: str = os.path.join(output_directory, timestamp)
 
     # Add the output directory line to the config file
-    config["Settings"]["output_directory"] = run_directory
+    config["Settings"]["output_directory"] = output_directory
     config["Settings"]["output_dir_Message"] = "output_directory is auto-generated."
 
     # Write the updated config file
     with open("config.ini", "w") as configfile:
         config.write(configfile)
 
-    if not os.path.exists(run_directory):
-        os.makedirs(run_directory)
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
 
     # Copy the config.ini file to the run directory
     config_file = os.path.join("config.ini")
     if os.path.exists(config_file):
-        shutil.copy(config_file, os.path.join(run_directory, "previous_config.ini"))
-
-    # Create output directories for related output folders
-    # output_directories = ["output", "images", "logs"]
-    # for output_directory in output_directories:
-    #     output_path = os.path.join(run_directory, output_directory)
-    #     if not os.path.exists(output_path):
-    #         os.makedirs(output_path)
-
+        shutil.copy(config_file, os.path.join(output_directory, "previous_config.ini"))
 
 # Call the function to create a run directory
 create_run_directory()
