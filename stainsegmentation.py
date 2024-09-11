@@ -32,10 +32,7 @@ if not os.path.exists(mask_directory):
     os.makedirs(mask_directory)
 
 # Get the model path
-# model_path = Path("/home/roboticslab/Developer/pytorch_concrete_flaws_segmentation") / model
-# print(f"MODEL_PATH={model_path}")
-
-model_path = "/image2overlays/best_model_stain.pth"
+model_path = config["StainSegmentation"]["model"]
 print(f"MODEL_PATH={model_path}")
 
 # Define the directory where inference.py is located

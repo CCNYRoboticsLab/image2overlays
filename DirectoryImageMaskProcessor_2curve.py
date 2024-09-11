@@ -44,8 +44,18 @@ class DirectoryImageMaskProcessor_2curve:
         for idx, red_mask_filename in enumerate(image_files, start=1):
             print(f"Processing image {idx}/{total_images}: {red_mask_filename}")
             # Construct the raw image path using the directory and filename
-            raw_image_path = os.path.join(self.raw_directory_path, red_mask_filename.replace(".png", ".JPG"))  # Adjust the extension if necessary
-        
+            raw_image_base = os.path.splitext(red_mask_filename)[0]
+            raw_image_path = None
+            for ext in ['.png', '.PNG', '.jpg', '.JPG', '.jpeg', '.JPEG']:
+                potential_path = os.path.join(self.raw_directory_path, raw_image_base + ext)
+                if os.path.exists(potential_path):
+                    raw_image_path = potential_path
+                    break
+            
+            if raw_image_path is None:
+                print(f"Warning: No matching raw image found for {red_mask_filename}")
+                continue
+            
             self.process_image(raw_image_path, red_mask_filename)
 
         print("All images processed successfully.")

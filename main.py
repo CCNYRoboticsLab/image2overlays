@@ -94,26 +94,32 @@ def main():
         # Run crack related processing
         log_message("Running crack segmentation...")
         call_in_conda_env("python cracksegmentation.py")
+        # Produces: run_timestamp/mask/crack_mask
 
         # log_message("Running concrete mask...")
         # call_in_conda_env("python concretemask.py")
+        # Produces: run_timestamp/mask/concrete_mask
+
         if config['concrete_post_filter']:
             log_message("Running concrete post filter...")
             call_in_conda_env("python concretePostFilter.py")
-
-        log_message("Running crack23directions...")
-        call_in_conda_env("python crack23directions.py")
-
-        log_message("Running crack2curve...")
-        call_in_conda_env("python crack2curve.py")
-
-        exit()
+            # Updates: run_timestamp/mask/crack_mask
 
         log_message("Converting crack masks to 3 categories according to directions...")
         call_in_conda_env("python crack23directions.py")
+        # Produces: run_timestamp/mask/crack_mask_3directions
+
+        log_message("Running crack2curve...")
+        call_in_conda_env("python crack2curve.py")
+        # Produces: run_timestamp/mask/crack_curve
+
+        # Export nnfilteredCrackOverlay
+        log_message("Export nnfilteredCrackOverlay...")
+        call_in_conda_env("python export_nnfilteredCrackOverlay.py")
 
         log_message("Running crack overlay...")
         call_in_conda_env("python crackoverlay_transparent.py")
+        # Produces: run_timestamp/overlay/crack_overlay and filteredCrackOverlay and nnfilteredCrackOverlay?
 
         # log_message("Copying geolocation info to crack overlay...")
         # call_in_conda_env("python copy_geolocation_crack.py")
@@ -147,8 +153,8 @@ def main():
         call_in_conda_env("python stainoverlay_transparent.py")
         exit()
 
-        log_message("Copying geolocation info to stain overlay...")
-        call_in_conda_env("python3 copy_geolocation_stain.py")
+        # log_message("Copying geolocation info to stain overlay...")
+        # call_in_conda_env("python3 copy_geolocation_stain.py")
 
         # log_message("Convert overlay images to pointcloud. ")
         # call_in_conda_env("python3 overlay2pointcloud.py --damage_type stain")
