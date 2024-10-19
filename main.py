@@ -115,7 +115,7 @@ def main():
 
         # Export nnfilteredCrackOverlay
         log_message("Export nnfilteredCrackOverlay...")
-        call_in_conda_env("python export_nnfilteredCrackOverlay.py")
+        call_in_conda_env("python export_filtered_overlay_png/export_nn_filtered_mask.py")
 
         log_message("Running crack overlay...")
         call_in_conda_env("python crackoverlay_transparent.py")
