@@ -5,6 +5,8 @@ import os
 import argparse
 import yaml
 
+# test
+
 # Define flags for processing
 concrete_mask = True
 process_crack = True
