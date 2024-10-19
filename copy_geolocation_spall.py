@@ -15,7 +15,7 @@ raw_image_directory = config["Settings"]["image_path"]
 # mask_directory = config['CrackSegmentation']['mask_directory']
 crack_overlay_directory = config["CrackOverlay"]["overlay_directory"]
 spall_overlay_directory = crack_overlay_directory.replace(
-    "crackoverlay", "filteredSpallOverlay"
+    "crackoverlay", "filteredSpallOverlays"
 )
 # The path to your copy_geolocation.py script
 copy_geolocation_script_path = "copy_geolocation.py"

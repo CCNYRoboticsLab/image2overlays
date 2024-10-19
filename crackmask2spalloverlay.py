@@ -3,7 +3,7 @@ import os
 import configparser
 
 def get_spall_overlay_directory(crack_overlay_directory):
-    return crack_overlay_directory.replace("filteredCrackOverlays", "filteredSpallOverlay")
+    return crack_overlay_directory.replace("filteredCrackOverlays", "filteredSpallOverlays")
 
 def main():
     # Load the INI file and parse it
