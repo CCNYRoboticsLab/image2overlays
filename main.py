@@ -3,8 +3,9 @@ import subprocess
 from datetime import datetime
 import os
 import argparse
-import yaml
-
+# import yaml
+import configparser
+import sys
 # test
 
 # Define flags for processing
@@ -63,13 +64,15 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_config():
-    with open('config.yaml', 'r') as f:
-        return yaml.safe_load(f)
+# def load_config():
+#     with open('config.yaml', 'r') as f:
+#         return yaml.safe_load(f)
 
 
 def main():
-    config = load_config()
+    # config = load_config()
+    config = configparser.ConfigParser()
+    config.read('config.ini')
     # Use config['concrete_mask'], config['process_crack'], etc.
     # ...
 
@@ -83,7 +86,7 @@ def main():
     log_message("Create raw, mask, overlay, mvs folders in run_timestamp folder.")
     call_in_conda_env("python UpdateRawMaskOverlayConfigs.py")
 
-    if config['concrete_mask']:
+    if concrete_mask:
         log_message("Running concrete mask...")
         call_in_conda_env("python concretemask.py")
 
@@ -92,7 +95,7 @@ def main():
 
     # Run crack related processing
 
-    if config['process_crack']:
+    if process_crack:
         # Run crack related processing
         log_message("Running crack segmentation...")
         call_in_conda_env("python cracksegmentation.py")
@@ -102,22 +105,24 @@ def main():
         # call_in_conda_env("python concretemask.py")
         # Produces: run_timestamp/mask/concrete_mask
 
-        if config['concrete_post_filter']:
+        if concrete_post_filter:
             log_message("Running concrete post filter...")
             call_in_conda_env("python concretePostFilter.py")
             # Updates: run_timestamp/mask/crack_mask
+            
+        print(sys.argv[0])
+        if sys.argv[0] == 'T':
+            log_message("Converting crack masks to 3 categories according to directions...")
+            call_in_conda_env("python crack23directions.py")
+            # Produces: run_timestamp/mask/crack_mask_3directions
 
-        log_message("Converting crack masks to 3 categories according to directions...")
-        call_in_conda_env("python crack23directions.py")
-        # Produces: run_timestamp/mask/crack_mask_3directions
+            log_message("Running crack2curve...")
+            call_in_conda_env("python crack2curve.py")
+            # Produces: run_timestamp/mask/crack_curve
 
-        log_message("Running crack2curve...")
-        call_in_conda_env("python crack2curve.py")
-        # Produces: run_timestamp/mask/crack_curve
-
-        # Export nnfilteredCrackOverlay
-        log_message("Export nnfilteredCrackOverlay...")
-        call_in_conda_env("python export_filtered_overlay_png/export_nn_filtered_mask.py")
+        # # Export nnfilteredCrackOverlay
+        # log_message("Export nnfilteredCrackOverlay...")
+        # call_in_conda_env("python export_filtered_overlay_png/export_nn_filtered_mask.py")
 
         log_message("Running crack overlay...")
         call_in_conda_env("python crackoverlay_transparent.py")
@@ -129,7 +134,7 @@ def main():
         # log_message("Convert overlay images to pointcloud. ")
         # call_in_conda_env("python overlay2pointcloud.py --damage_type crack")
 
-        if config['process_spall']:
+        if process_spall:
             log_message("Creating spall overlay...")
             call_in_conda_env("python3 crackmask2spalloverlay_transparent.py")
 
@@ -142,12 +147,12 @@ def main():
         #     log_message("Convert to Potree. ")
         #     call_in_conda_env("python3 las2potree.py --damage_type spall")
 
-    if config['process_stain']:
+    if process_stain:
         # Run stain related processing
         log_message("Running stain segmentation...")
         call_in_conda_env("python stainsegmentation.py")
 
-        if config['concrete_post_filter']:
+        if concrete_post_filter:
             log_message("Running concrete post filter...")
             call_in_conda_env("python concretePostFilterStain.py")
 
